@@ -1,0 +1,81 @@
+*******Integer and character types*******
+
+int (storage size):4
+char (storage size):1
+short (storage size):2
+long int (storage size):4
+long long int (storage size):8
+Multybyte char for any locale (bytes):16
+
+int (max):2147483647
+int (min):-2147483648
+
+long (max):2147483647
+long (min):-2147483648
+
+char (max):127
+char (min):-128
+char (bits):8
+
+short (max):32767
+short (min):-32768
+
+signed char (max):127
+signed char (min):-128
+
+unsigned int (max):4294967295
+unsigned long (max):4294967295
+unsigned char (max):255
+unsigned short (max):65535
+
+
+*******Floating point types*******
+
+float (storage size):4
+double (storage size):8
+long double (storage size):12
+
+float (max):	3.40282e+38
+float (min):	1.17549e-38
+
+double (max):	1.79769e+308
+double (min):	2.22507e-308
+
+long double (max):	1.18973e+4932
+long double (min):	3.3621e-4932
+
+Base for all floating-point types (float, double, long double):	2
+
+Precision value (float):6
+Precision value (double):15
+Precision value (long double):18
+
+Mantisa bits / significand (float):24
+Mantisa bits / significand (double):53
+Mantisa bits / significand (long double):64
+
+Minimum int value for the exponent (float):-125
+Minimum int value for the exponent (double):-1021
+Minimum int value for the exponent (long double):-16381
+
+Maximum int value for the exponent (float):128
+Maximum int value for the exponent (double):1024
+Maximum int value for the exponent (long double):16384
+
+Difference between 1 and the least value greater than 1 that is representable. (float):1.19209e-07
+Difference between 1 and the least value greater than 1 that is representable. (double):2.22045e-16
+Difference between 1 and the least value greater than 1 that is representable. (long double):1.0842e-19
+
+
+*******Processing*******
+
+Clocks per second:1000000
+
+Swaps per second:1390465
+Comparisons per second:1400213
+Memory allocations per second:1315317
+Linear searches in a 10000 length array:38397
+Binary searches in a 10000 length array:977226
+
+Current set locale: C
+Current environment's locale: es_MX.UTF-8
