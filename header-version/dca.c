@@ -1,53 +1,7 @@
-/*This program makes a through analysis to find some of the capabalities of a device's implementation. This includes numerical and char types, some basic processing units and a couple of locale settings.
-As long as the device supports the #included C standard libraries, you'll be able to get a report of its capabilities. 
+#include "dca.h"
 
-As an input you can provide the name of a file; or an empty string "" so all the information will be sent to stdout. 
-
-./dca myImplementationCapabilities.txt
-*/
-#include <limits.h>
-#include <float.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-#include <locale.h>
-
-
-void deviceCapabilitiesAnalizer( char *stream );
-long double factorial(long double n);
-int compareints (const void * a, const void * b);
-
-void intLimits( FILE *stream );
-void charLimits( FILE *stream );
-void floatLimits( FILE *stream );
-void mantisaAndExponentLimits(FILE *stream);
-void epsilonLimits(FILE *stream);
-
-void localeSettings(FILE *stream);
-void storageSizes(FILE *stream);
-
-unsigned long long swapsPerSecond(FILE *stream, const int ARRAY_SIZE);
-unsigned long long comparisonsPerSecond(FILE *stream);
-unsigned long long memoryAllocationsPerSecond(FILE *stream);
-unsigned long long linearSearchesPerSecond(FILE *Stream, const int ARRAY_SIZE);
-unsigned long long binarySearchesPerSecond( FILE *Stream, const int ARRAY_SIZE );
-
-int main(int argc, char *argv[])
-{
-	FILE * tempFile;
-	if( argc < 2 )
-	{
-		deviceCapabilitiesAnalizer(NULL);
-	}
-	else if( (tempFile = fopen(argv[1], "a") ) == NULL )
-		deviceCapabilitiesAnalizer(argv[1]);
-	else
-		printf("Any of the necessary arguments are missing or with a wrong format");
-	
-	return EXIT_SUCCESS;
-}
-
-void deviceCapabilitiesAnalizer(char *fileName)
+//Calls all the functions to create a full report of all the system limits and capabilities on stdout or on a file.
+void fullReport(char *fileName)
 {
 	const int ARRAY_SIZE = 10000;
 	FILE *stream;
@@ -56,20 +10,15 @@ void deviceCapabilitiesAnalizer(char *fileName)
 	else
 		stream = fopen(fileName, "a");
 
-	fprintf(stream, "*******Integer and character types*******\n\n");
 	intLimits( stream );
 	charLimits( stream );
 	
-	fprintf(stream, "\n*******Floating point types*******\n\n");
 	floatLimits( stream );
 	mantisaAndExponentLimits(stream);
 	epsilonLimits(stream);
 	
-	fprintf(stream, "\n*******Storage limits*******\n\n");
 	storageSizes(stream);
 
-	fprintf(stream, "\n*******Processing*******\n\n");
-	//Clock ticks are units of time of a constant but system-specific length, as those returned by function clock.
 	fprintf(stream, "Clocks per second:%lu\n\n", CLOCKS_PER_SEC);
 
 	fprintf(stream, "Swaps per second:%llu\n", swapsPerSecond(stream, ARRAY_SIZE) );
@@ -78,7 +27,6 @@ void deviceCapabilitiesAnalizer(char *fileName)
 	fprintf(stream, "Linear searches in a %u length array:%llu\n", ARRAY_SIZE, linearSearchesPerSecond(stream, ARRAY_SIZE) );
 	fprintf(stream, "Binary searches in a %u length array:%llu\n", ARRAY_SIZE, binarySearchesPerSecond( stream, ARRAY_SIZE) );
 	
-	fprintf(stream, "\n*******locale settings*******\n\n");
 	localeSettings(stream);
 
 	if( fileName != NULL )
@@ -86,11 +34,13 @@ void deviceCapabilitiesAnalizer(char *fileName)
 	
 }
 
+//auxiliar function for the binary search function
 int compareints (const void *a, const void *b)
 {
   return ( *(int*)a - *(int*)b );
 }
 
+//summarizes the limits for all integer/long/short types
 void intLimits( FILE *stream )
 {	
 	fprintf(stream, "int (max):%d\n", INT_MAX);
@@ -109,6 +59,7 @@ void intLimits( FILE *stream )
 
 }
 
+//summarizes the limits for all char/wide char types
 void charLimits( FILE *stream )
 {
 	fprintf(stream, "char (max):%d\n", CHAR_MAX);
@@ -119,6 +70,7 @@ void charLimits( FILE *stream )
 	fprintf(stream, "signed char (min):%d\n\n", SCHAR_MIN);
 }
 
+//summarizes the storagas sizes for all the primitive types
 void storageSizes(FILE *stream)
 {
 	fprintf(stream, "char (storage size):%-lu\n", sizeof(char) );
@@ -135,6 +87,7 @@ void storageSizes(FILE *stream)
 
 }
 
+//summarizes the limits for all float/double types
 void floatLimits( FILE *stream )
 {
 	fprintf(stream, "float (max):%g\n", (float) FLT_MAX);
@@ -152,6 +105,7 @@ void floatLimits( FILE *stream )
 	fprintf(stream, "Precision value (long double):%d\n\n", LDBL_DIG );
 }
 
+//summarizes the limits for the mantisa/significand and the exponent of a float/double type 
 void mantisaAndExponentLimits(FILE *stream)
 {
 	fprintf(stream, "Mantisa bits / significand (float):%d\n", FLT_MANT_DIG);
@@ -167,6 +121,7 @@ void mantisaAndExponentLimits(FILE *stream)
 	fprintf(stream, "Maximum int value for the exponent (long double):%d\n\n", LDBL_MAX_EXP );
 }
 
+//summarizes the limits for the epsilon value.
 void epsilonLimits(FILE *stream)
 {
 
@@ -176,6 +131,7 @@ void epsilonLimits(FILE *stream)
 
 }
 
+//tells how many swaps per second the computer is capable to perform. Note this is just an aporximate measure.
 unsigned long long swapsPerSecond(FILE *stream, const int ARRAY_SIZE)
 {
 	int array[ARRAY_SIZE];
@@ -199,6 +155,7 @@ unsigned long long swapsPerSecond(FILE *stream, const int ARRAY_SIZE)
 	return times;
 }
 
+//tells how many comparisons per second the computer is capable to perform. Note this is just an aporximate measure.
 unsigned long long comparisonsPerSecond(FILE *stream)
 {
 	clock_t tOneScond, tCounter;
@@ -216,6 +173,7 @@ unsigned long long comparisonsPerSecond(FILE *stream)
 	return times;
 }
 
+//tells how many memory allocations per second the computer is capable to perform. Note this is just an aporximate measure.
 unsigned long long memoryAllocationsPerSecond(FILE *stream)
 {
 	unsigned long long times = 0;
@@ -235,6 +193,7 @@ unsigned long long memoryAllocationsPerSecond(FILE *stream)
 
 }
 
+//tells how many linear searches per second the computer is capable to perform. Note this is just an aporximate measure.
 unsigned long long linearSearchesPerSecond(FILE *stream, const int ARRAY_SIZE)
 {
 	int array[ARRAY_SIZE];
@@ -266,6 +225,7 @@ unsigned long long linearSearchesPerSecond(FILE *stream, const int ARRAY_SIZE)
 	return times;
 }
 
+//tells how many binary searches per second the computer is capable to perform. Note this is just an aporximate measure.
 unsigned long long binarySearchesPerSecond( FILE *stream, const int ARRAY_SIZE)
 {
 	int * pItem, key;
@@ -290,6 +250,7 @@ unsigned long long binarySearchesPerSecond( FILE *stream, const int ARRAY_SIZE)
 	return times;
 }
 
+//informs about the system locale settings and the current set locale settings in the program
 void localeSettings(FILE *stream)
 {
 	char* locale;
